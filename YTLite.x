@@ -707,6 +707,7 @@ static BOOL findCell(ASNodeController *nodeController, NSArray <NSString *> *ide
         _ASCollectionViewCell *cell = %orig;
         if ([cell respondsToSelector:@selector(node)]) {
             NSString *idToRemove = [[cell node] accessibilityIdentifier];
+            NSLog(@"YTLite: idToRemove = %@", idToRemove);
             if ([idToRemove isEqualToString:@"statement_banner.view"] ||
                 (([idToRemove isEqualToString:@"eml.shorts-grid"] || [idToRemove isEqualToString:@"eml.shorts-shelf"]) && ytlBool(@"hideShorts"))) {
                 [self removeCellsAtIndexPath:indexPath];
