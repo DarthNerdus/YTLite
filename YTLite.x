@@ -45,6 +45,7 @@ static UIImage *YTImageNamed(NSString *imageName) {
 
     NSArray *shortsToRemove = @[@"shorts_shelf.eml", @"shorts_video_cell.eml", @"6Shorts"];
     for (NSString *shorts in shortsToRemove) {
+        NSLog(@"YTLite: description = %@", description);
         if (ytlBool(@"hideShorts") && [description containsString:shorts] && ![description containsString:@"history*"]) {
             return nil;
         }
