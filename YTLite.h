@@ -1,12 +1,22 @@
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
 #import <Photos/Photos.h>
+#import <os/log.h>
+
 #import "Utils/NSBundle+YTLite.h"
 #import "Utils/YTLUserDefaults.h"
 #import "Utils/Reachability.h"
 #import "YouTubeHeaders.h"
 
 #define LOC(key) [NSBundle.ytl_defaultBundle localizedStringForKey:key value:nil table:nil]
+
+// Logging macros
+#define YTL_LOG(format, ...) os_log(OS_LOG_DEFAULT, "[YTLite] " format, ##__VA_ARGS__)
+#define YTL_LOG_ERROR(format, ...) os_log_error(OS_LOG_DEFAULT, "[YTLite] ERROR: " format, ##__VA_ARGS__)
+#define YTL_FILE_LOG(format, ...) YTLWriteLog([NSString stringWithFormat:format, ##__VA_ARGS__])
+
+// Function declaration for file logging
+static void YTLWriteLog(NSString *message);
 
 #define ytlBool(key) [[YTLUserDefaults standardUserDefaults] boolForKey:key]
 #define ytlInt(key) [[YTLUserDefaults standardUserDefaults] integerForKey:key]

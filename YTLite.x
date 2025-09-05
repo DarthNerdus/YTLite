@@ -1,5 +1,26 @@
 #import "YTLite.h"
 
+// File-based logging function
+static void YTLWriteLog(NSString *message) {
+    NSString *documentsPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *logPath = [documentsPath stringByAppendingPathComponent:@"YTLite.log"];
+    
+    NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+    [formatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSString *timestamp = [formatter stringFromDate:[NSDate date]];
+    
+    NSString *logEntry = [NSString stringWithFormat:@"[%@] %@\n", timestamp, message];
+    
+    if ([[NSFileManager defaultManager] fileExistsAtPath:logPath]) {
+        NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:logPath];
+        [fileHandle seekToEndOfFile];
+        [fileHandle writeData:[logEntry dataUsingEncoding:NSUTF8StringEncoding]];
+        [fileHandle closeFile];
+    } else {
+        [logEntry writeToFile:logPath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    }
+}
+
 static UIImage *YTImageNamed(NSString *imageName) {
     return [UIImage imageNamed:imageName inBundle:[NSBundle mainBundle] compatibleWithTraitCollection:nil];
 }
@@ -45,7 +66,8 @@ static UIImage *YTImageNamed(NSString *imageName) {
 
     NSArray *shortsToRemove = @[@"shorts_shelf.eml", @"shorts_video_cell.eml", @"6Shorts"];
     for (NSString *shorts in shortsToRemove) {
-        NSLog(@"YTLite: description = %@", description);
+        YTL_LOG("description = %@", description);
+        YTL_FILE_LOG(@"Shorts element description: %@", description);
         if (ytlBool(@"hideShorts") && [description containsString:shorts] && ![description containsString:@"history*"]) {
             return nil;
         }
@@ -708,7 +730,8 @@ static BOOL findCell(ASNodeController *nodeController, NSArray <NSString *> *ide
         _ASCollectionViewCell *cell = %orig;
         if ([cell respondsToSelector:@selector(node)]) {
             NSString *idToRemove = [[cell node] accessibilityIdentifier];
-            NSLog(@"YTLite: idToRemove = %@", idToRemove);
+            YTL_LOG("idToRemove = %@", idToRemove);
+            YTL_FILE_LOG("idToRemove = %@", idToRemove);
             if ([idToRemove isEqualToString:@"statement_banner.view"] ||
                 (([idToRemove isEqualToString:@"eml.shorts-grid"] || [idToRemove isEqualToString:@"eml.shorts-shelf"]) && ytlBool(@"hideShorts"))) {
                 [self removeCellsAtIndexPath:indexPath];
