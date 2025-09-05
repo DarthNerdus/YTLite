@@ -1406,6 +1406,9 @@ static NSURL *newCoverURL(NSURL *originalURL) {
 // %end
 
 %ctor {
+    YTL_LOG("YTLite tweak loaded successfully!");
+    YTL_FILE_LOG(@"YTLite tweak constructor called - version %@", @TWEAK_VERSION);
+    
     if (ytlBool(@"shortsOnlyMode") && (ytlBool(@"removeShorts") || ytlBool(@"reExplore"))) {
         ytlSetBool(NO, @"removeShorts");
         ytlSetBool(NO, @"reExplore");
